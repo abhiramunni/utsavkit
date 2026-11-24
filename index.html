@@ -297,3 +297,58 @@ footer.site .fine{margin-top:10px;font-size:12.5px}
 
 <!-- long weekends -->
 <section id="weekends">
+  <div class="sec-head"><div><div class="eyebrow">Travel planning</div><h2>Long weekends of 2027</h2></div>
+  <p>Six stretches worth booking trains for. Dates are from the central government holiday list; festival dates can shift by a day where the moon decides.</p></div>
+  <div class="rule"></div>
+  <div class="lw-grid" id="lwGrid"></div>
+</section>
+
+<!-- photo band -->
+<div class="band">
+  <img src="utsavkit-flatlay.webp" alt="Festival prep flat-lay: brass diyas, marigolds, kumkum, coconut and banana leaf" onerror="this.style.display='none'">
+  <div class="cap"><h3>Prep starts a week early, not the night before.</h3><p>Every festival in this app carries a short prep list — open it, tick things off, and the day itself stays calm.</p></div>
+</div>
+
+<!-- guides -->
+<section id="guides">
+  <div class="sec-head"><div><div class="eyebrow">Plain words</div><h2>How festival dates actually work</h2></div>
+  <p>Six short explainers — no jargon, no panchang degree needed.</p></div>
+  <div class="rule"></div>
+  <div class="guides" id="guidesGrid"></div>
+</section>
+
+<!-- settings -->
+<section id="settings">
+  <div class="sec-head"><div><div class="eyebrow">Your data</div><h2>Keep it, copy it, clear it</h2></div>
+  <p>Everything you tick, star or add lives only in this browser — on your device, nowhere else.</p></div>
+  <div class="rule"></div>
+  <div class="settings">
+    <div id="occSummary" class="small muted">Your occasions: 2 saved. Starred festivals: 0.</div>
+    <div class="btnrow">
+      <button class="btn" id="copySummary" type="button">Copy my festival summary</button>
+      <button class="btn ghost" id="removeSamples" type="button">Remove sample occasions</button>
+      <button class="btn ghost" id="eraseAll" type="button">Erase everything</button>
+    </div>
+    <p class="small muted" style="margin:12px 0 0" id="copyNote"></p>
+  </div>
+</section>
+</main>
+
+<footer class="site"><div class="wrap">
+  <b class="serif" style="font-size:18px;color:var(--ink)">UtsavKit</b> — your Indian festival year, planned ahead.
+  <p class="fine">Dates: Karthigai Deepam and Guru Nanak Jayanti are 24 November 2026; 2027 dates follow the central government holiday list (DoPT, 16 July 2026) and standard panchang calculations. Moon-sighted dates (Eid) are expected dates and can move by a day — check locally nearer the time. Regional observance can shift a date by a day. This app is a planning aid, not a panchang.</p>
+</div></footer>
+<!-- festival detail sheet -->
+<div class="sheet-back" id="sheetBack">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <button class="x" id="sheetClose" type="button" aria-label="Close">×</button>
+    <div class="eyebrow" id="sheetKind">Festival</div>
+    <h2 id="sheetTitle">Festival</h2>
+    <div class="date-line" id="sheetDate">—</div>
+    <p class="muted" id="sheetBlurb" style="margin-top:8px"></p>
+    <div style="margin-top:10px" id="sheetChips"></div>
+    <div class="prog"><span id="sheetProgLabel">Prep: 0 of 4 done</span><span class="bar"><i id="sheetProgBar" style="width:0%"></i></span><span id="sheetDays"></span></div>
+    <h3 class="serif" style="font-size:19px;margin-top:18px">Prep list</h3>
+    <ul class="prep" id="sheetPrep"></ul>
+    <div class="btnrow">
+      <button class="btn terra" id="sheetStar" type="button">Star this festival</button>
