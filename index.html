@@ -524,3 +524,56 @@ function renderWheel(){
     var ang=wheelAngle(it.date), pt=polar(cx,cy,rDot,ang);
     s+='<g class="wheel-dot" data-id="'+it.id+'"><circle cx="'+pt[0].toFixed(1)+'" cy="'+pt[1].toFixed(1)+'" r="'+(it.custom?5.5:6.5)+'" fill="'+(it.custom?'#c05b2e':'#d4a017')+'" stroke="#fffdf6" stroke-width="1.5"><title>'+esc(it.name)+' — '+esc(shortDate(it.date))+'</title></circle></g>';
   });
+  svg.innerHTML=s;
+  $$('#wheelSvg .wheel-dot').forEach(function(g){g.addEventListener('click',function(){openSheet(g.getAttribute('data-id'));});});
+  /* month chips under wheel */
+  var wm=$('#wheelMonths');
+  if(wm){wm.innerHTML='';for(var k=0;k<12;k++){var md=new Date(2026,10+k,1);var b=document.createElement('button');b.type='button';b.className='mchip';b.textContent=MONTHS[md.getMonth()].slice(0,3)+' '+md.getFullYear();(function(y,mo){b.addEventListener('click',function(){selectMonth(y,mo);});})(md.getFullYear(),md.getMonth());wm.appendChild(b);}}
+}
+function fmtISO(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+/* ---------- hero / today ---------- */
+function renderHero(){
+  var pill=$('#todayPill');
+  var t=todayMid();
+  if(pill)pill.textContent='Today · '+t.getDate()+' '+MONTHS[t.getMonth()].slice(0,3);
+  var todays=allItems().filter(function(x){return daysLeft(x.date)===0;});
+  var up=upcoming();
+  var next=up.filter(function(x){return !x.custom&&daysLeft(x.date)>0;})[0]||null;
+  if(todays.length){
+    var first=todays[0];
+    $('#todayTitle').textContent=first.name+' is today.';
+    $('#todaySub').textContent=todays.length>1?'Also today: '+todays.slice(1).map(function(x){return x.name;}).join(' · '):first.region+' · '+first.comm;
+    $('#todayBlurb').textContent=first.blurb;
+  }else if(next){
+    $('#todayTitle').textContent='Nothing today — '+next.name+' is next.';
+    $('#todaySub').textContent=fmtDate(next.date);
+    $('#todayBlurb').textContent=next.blurb;
+  }
+  if(next){
+    $('#nextDays').textContent=daysLeft(next.date);
+    $('#nextName').textContent=next.name+' · '+shortDate(next.date);
+  }else{
+    $('#nextDays').textContent='—';
+    $('#nextName').textContent='The year is done — add a new occasion';
+  }
+  $('#yearChip').textContent=FESTIVALS.length+' festivals · '+state.customs.length+' of your own';
+}
+
+/* ---------- coming up rail ---------- */
+function ringSvg(days,total){
+  var pct=total?Math.max(4,Math.min(100,Math.round(100*(1-days/total)))):100;
+  var c=2*Math.PI*15;
+  return '<svg width="38" height="38" viewBox="0 0 38 38"><circle cx="19" cy="19" r="15" fill="none" stroke="#efe3cb" stroke-width="4"/><circle cx="19" cy="19" r="15" fill="none" stroke="#c05b2e" stroke-width="4" stroke-linecap="round" stroke-dasharray="'+(c*pct/100).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 19 19)"/><text x="19" y="23" text-anchor="middle" font-size="11" font-weight="700" fill="#2b1d12">'+days+'</text></svg>';
+}
+function renderComing(){
+  var rail=$('#comingRail');if(!rail)return;
+  var up=upcoming().slice();
+  up.sort(function(a,b){var sa=isStarred(a.id)?0:1,sb=isStarred(b.id)?0:1;return sa-sb||parseD(a.date)-parseD(b.date);});
+  var list=up.slice(0,6);
+  rail.innerHTML='';
+  list.forEach(function(it){
+    var dl=daysLeft(it.date);
+    var done=prepDone(it);
+    var card=document.createElement('button');
+    card.type='button';card.className='fest-card';
