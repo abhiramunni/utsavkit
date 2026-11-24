@@ -702,3 +702,71 @@ function renderPrep(it){
 function closeSheet(){$('#sheetBack').classList.remove('show');currentSheet=null;}
 
 /* ---------- add occasion ---------- */
+function openOcc(){$('#occBack').classList.add('show');}
+function closeOcc(){$('#occBack').classList.remove('show');}
+
+/* ---------- summary text ---------- */
+function summaryText(){
+  var up=upcoming().slice(0,5);
+  var lines=['UtsavKit — my festival year'];
+  lines.push('Today: '+fmtDate(fmtISO(todayMid())));
+  up.forEach(function(it){lines.push('- '+it.name+' — '+fmtDate(it.date)+' ('+daysLeft(it.date)+' days)');});
+  lines.push('Starred: '+(state.stars.length?state.stars.map(function(id){var f=findItem(id);return f?f.name:id;}).join(', '):'none yet'));
+  lines.push('My occasions: '+state.customs.map(function(o){return o.name+' '+shortDate(o.date);}).join('; '));
+  return lines.join('\n');
+}
+
+/* ---------- coach + intro ---------- */
+var COACH=[
+{t:'The wheel is your year',x:'One circle holds November 2026 to October 2027. Every dot is a festival — tap one to see its date and prep list.'},
+{t:'Prep lists keep the day calm',x:'Open any festival and tick off its short prep list — lamps, sweets, gifts — a week early, not the night before.'},
+{t:'Your occasions live here too',x:'Add birthdays and anniversaries with the button under the month list. They appear on the wheel in terracotta, next to the festivals.'}
+];
+var coachStep=0;
+function showCoach(step){
+  coachStep=step;
+  $('#coachStep').textContent=(step+1)+' of 3';
+  $('#coachTitle').textContent=COACH[step].t;
+  $('#coachText').textContent=COACH[step].x;
+  $$('#coach .dots i').forEach(function(d,i){d.className=i===step?'on':'';});
+  $('#coachNext').textContent=step===2?'Start planning':'Next';
+  $('#coach').classList.add('show');
+}
+function hideCoach(){$('#coach').classList.remove('show');}
+function hideIntro(){
+  var intro=$('#intro');if(intro)intro.classList.add('hide');
+  setTimeout(function(){if(intro)intro.style.display='none';},700);
+}
+
+/* ---------- wire up ---------- */
+function wire(){
+  $('#sheetClose').addEventListener('click',closeSheet);
+  $('#sheetBack').addEventListener('click',function(e){if(e.target===this)closeSheet();});
+  $('#sheetStar').addEventListener('click',function(){
+    if(!currentSheet)return;
+    toggleStar(currentSheet);
+    this.textContent=isStarred(currentSheet)?'Unstar this festival':'Star this festival';
+  });
+  $('#sheetShare').addEventListener('click',function(){
+    if(!currentSheet)return;
+    var it=findItem(currentSheet);if(!it)return;
+    var text=it.name+' — '+fmtDate(it.date)+' ('+daysLeft(it.date)+' days to go). '+it.blurb;
+    copyText(text,'Festival note copied.');
+  });
+  $('#occClose').addEventListener('click',closeOcc);
+  $('#occCancel').addEventListener('click',closeOcc);
+  $('#occBack').addEventListener('click',function(e){if(e.target===this)closeOcc();});
+  $('#addOccasionBtn').addEventListener('click',openOcc);
+  $('#showStarredBtn').addEventListener('click',function(){
+    starredOnly=!starredOnly;
+    this.textContent=starredOnly?'Show all festivals':'Show starred only';
+    if(starredOnly){selMonth=null;renderMonthChips();}
+    renderMonthList();
+    safeScroll($('#months'));
+  });
+  $('#occForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    var name=$('#occName').value.trim(),date=$('#occDate').value,note=$('#occNote').value.trim();
+    if(!name||!date)return;
+    state.customs.push({id:'occ-'+Date.now(),name:name,date:date,note:note,sample:false});
+    save();closeOcc();this.reset();
