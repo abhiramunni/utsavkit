@@ -234,3 +234,66 @@ footer.site .fine{margin-top:10px;font-size:12.5px}
 </div>
 
 <div class="wrap today-card">
+  <div class="card">
+    <div class="today-left">
+      <div class="eyebrow">Today · Tuesday 24 November 2026</div>
+      <h2 id="todayTitle">Karthigai Deepam is today.</h2>
+      <div class="date-line" id="todaySub">Also today: Guru Nanak Jayanti</div>
+      <p class="muted small" id="todayBlurb" style="margin:0">The festival of lights — rows of oil lamps at dusk to honour Shiva as an endless pillar of light.</p>
+    </div>
+    <div class="today-right">
+      <div class="big-num"><span id="nextDays">31</span><small> days to</small></div>
+      <div style="font-weight:700;margin-top:2px" id="nextName">Christmas · 25 Dec 2026</div>
+      <div style="margin-top:10px"><span class="chip gold" id="nextChip">Next festival</span> <span class="chip" id="yearChip">33 festivals in the year</span></div>
+    </div>
+  </div>
+</div>
+
+<main class="wrap">
+<!-- year wheel -->
+<section id="wheel">
+  <div class="sec-head"><div><div class="eyebrow">The year ahead</div><h2>The festival wheel</h2></div>
+  <p>One circle, twelve months — November 2026 to October 2027. Tap any lamp-dot to open that festival.</p></div>
+  <div class="rule"></div>
+  <div class="wheel-wrap">
+    <div class="wheel-box">
+      <svg id="wheelSvg" viewBox="0 0 400 400" role="img" aria-label="Circular year wheel with festival dates"></svg>
+      <div class="wheel-note">Dots on the outer ring are festivals; the gold ring marks today. Chhath Puja, Guru Nanak Jayanti and Christmas 2027 sit just past this wheel — find them in the month list below.</div>
+    </div>
+    <div class="wheel-side">
+      <h3>How to read it</h3>
+      <p class="muted">Start at the top and go clockwise: each slice is a month, each dot is a festival on its date. Festivals bunch up in March–April and again in September–October — those are the two big seasons.</p>
+      <div class="legend">
+        <span class="dot-key"><i style="background:#d4a017"></i>Festival</span>
+        <span class="dot-key"><i style="background:#c05b2e"></i>Your occasion</span>
+        <span class="dot-key"><i style="background:#fff;border:2px solid #d4a017"></i>Today</span>
+      </div>
+      <div class="wheel-months" id="wheelMonths"></div>
+      <p class="small muted" style="margin-top:14px">Tip: star a festival to keep it at the top of your coming-up list.</p>
+    </div>
+  </div>
+</section>
+
+<!-- coming up -->
+<section id="coming">
+  <div class="sec-head"><div><div class="eyebrow">Next on the calendar</div><h2>Coming up</h2></div>
+  <p>The next six festivals, nearest first — with days to go and how ready your prep list is.</p></div>
+  <div class="rule"></div>
+  <div class="rail" id="comingRail"></div>
+</section>
+
+<!-- months -->
+<section id="months">
+  <div class="sec-head"><div><div class="eyebrow">Month by month</div><h2>Browse the year</h2></div>
+  <p>Pick a month to see every festival in it — including your own occasions.</p></div>
+  <div class="rule"></div>
+  <div class="wheel-months" id="monthChips" style="margin-bottom:16px"></div>
+  <div class="month-list" id="monthList"></div>
+  <div class="btnrow">
+    <button class="btn" id="addOccasionBtn" type="button">+ Add your own occasion</button>
+    <button class="btn ghost" id="showStarredBtn" type="button">Show starred only</button>
+  </div>
+</section>
+
+<!-- long weekends -->
+<section id="weekends">
