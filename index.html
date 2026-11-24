@@ -481,3 +481,46 @@ load();
 
 function allItems(){
   var f=FESTIVALS.map(function(x){return {id:x.id,name:x.name,date:x.date,region:x.region,comm:x.comm,kind:x.kind,blurb:x.blurb,prep:x.prep.slice(),custom:false,sample:false};});
+  var c=state.customs.map(function(o){return {id:o.id,name:o.name,date:o.date,region:'Your occasion',comm:'Personal',kind:'Occasion',blurb:o.note||'An occasion you added.',prep:[],custom:true,sample:!!o.sample};});
+  return f.concat(c);
+}
+function findItem(id){return allItems().filter(function(x){return x.id===id;})[0]||null;}
+function upcoming(){return allItems().filter(function(x){return daysLeft(x.date)>=0;}).sort(function(a,b){return parseD(a.date)-parseD(b.date)||(a.custom?1:0)-(b.custom?1:0);});}
+function prepDone(item){if(!item.prep.length)return null;var c=state.checks[item.id]||[];return item.prep.filter(function(_,i){return c[i];}).length;}
+function isStarred(id){return state.stars.indexOf(id)>-1;}
+
+/* ---------- year wheel ---------- */
+var WHEEL_START=new Date(2026,10,1); /* 1 Nov 2026 */
+var WHEEL_DAYS=365;
+function wheelAngle(dateStr){var off=(parseD(dateStr)-WHEEL_START)/86400000;return (off/WHEEL_DAYS)*360-90;}
+function polar(cx,cy,r,deg){var rad=deg*Math.PI/180;return [cx+r*Math.cos(rad),cy+r*Math.sin(rad)];}
+function renderWheel(){
+  var svg=$('#wheelSvg');if(!svg)return;
+  var cx=200,cy=200,R=168,rIn=118,rDot=104;
+  var s='';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="#fffdf6" stroke="#e8dcc8"/>';
+  s+='<circle cx="'+cx+'" cy="'+cy+'" r="'+rIn+'" fill="none" stroke="#f1e6cf" stroke-width="1.5"/>';
+  /* month slices: Nov 2026 .. Oct 2027 */
+  for(var m=0;m<12;m++){
+    var d0=new Date(2026,10+m,1),d1=new Date(2026,10+m+1,1);
+    var a0=((d0-WHEEL_START)/86400000/WHEEL_DAYS)*360-90, a1=((d1-WHEEL_START)/86400000/WHEEL_DAYS)*360-90;
+    var p0=polar(cx,cy,R,a0),p1=polar(cx,cy,R,a1),p2=polar(cx,cy,rIn,a1),p3=polar(cx,cy,rIn,a0);
+    var large=(a1-a0)>180?1:0;
+    s+='<path d="M'+p0[0].toFixed(1)+' '+p0[1].toFixed(1)+' A'+R+' '+R+' 0 '+large+' 1 '+p1[0].toFixed(1)+' '+p1[1].toFixed(1)+' L'+p2[0].toFixed(1)+' '+p2[1].toFixed(1)+' A'+rIn+' '+rIn+' 0 '+large+' 0 '+p3[0].toFixed(1)+' '+p3[1].toFixed(1)+' Z" fill="'+(m%2?'#faf3e7':'#f6ead2')+'" stroke="#e8dcc8" stroke-width="1"/>';
+    var mid=(a0+a1)/2, lp=polar(cx,cy,(R+rIn)/2,mid);
+    var label=MONTHS[d0.getMonth()].slice(0,3)+(d0.getFullYear()===2027?" '27":"");
+    s+='<text x="'+lp[0].toFixed(1)+'" y="'+(lp[1]+4).toFixed(1)+'" text-anchor="middle" font-size="11.5" font-weight="700" fill="#8a7a68" font-family="Inter,sans-serif">'+label+'</text>';
+  }
+  /* today marker */
+  var ta=wheelAngle(fmtISO(todayMid()));
+  var tp=polar(cx,cy,rDot,ta);
+  s+='<circle cx="'+tp[0].toFixed(1)+'" cy="'+tp[1].toFixed(1)+'" r="10" fill="#fff" stroke="#d4a017" stroke-width="2.5"/>';
+  s+='<text x="'+cx+'" y="'+(cy-4)+'" text-anchor="middle" font-size="12" font-weight="700" fill="#a06a2c" font-family="Inter,sans-serif">THE YEAR</text>';
+  s+='<text x="'+cx+'" y="'+(cy+14)+'" text-anchor="middle" font-size="12" font-weight="700" fill="#a06a2c" font-family="Inter,sans-serif">AHEAD</text>';
+  /* festival dots */
+  allItems().forEach(function(it){
+    var dd=parseD(it.date);
+    if(dd<WHEEL_START||dd>new Date(2027,9,31))return;
+    var ang=wheelAngle(it.date), pt=polar(cx,cy,rDot,ang);
+    s+='<g class="wheel-dot" data-id="'+it.id+'"><circle cx="'+pt[0].toFixed(1)+'" cy="'+pt[1].toFixed(1)+'" r="'+(it.custom?5.5:6.5)+'" fill="'+(it.custom?'#c05b2e':'#d4a017')+'" stroke="#fffdf6" stroke-width="1.5"><title>'+esc(it.name)+' — '+esc(shortDate(it.date))+'</title></circle></g>';
+  });
