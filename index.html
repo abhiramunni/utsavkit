@@ -444,3 +444,40 @@ var GUIDES=[
 {t:'Panchang, solar and moon dates',b:'Hindu lunar festivals (Holi, Diwali, Janmashtami) follow the panchang. Solar festivals (Makar Sankranti, Pongal, Vishu) follow the Sun and fall on almost the same date every year. Islamic festivals (Eid, Muharram) follow the Hijri moon calendar and move about 11 days earlier each year.'},
 {t:'Moon-sighting dates, simply',b:'Eid and Muharram are confirmed only when the new moon is actually seen — usually the evening before. So the dates in this app are expected dates. If you are booking travel, keep the day before and after flexible.'},
 {t:'Planning travel around festivals',b:'Festival weeks are the busiest travel weeks in India. Book trains the day the 120-day window opens, and expect festival-week flight fares to be 1.5–2x normal. If you can, travel a day before the festival and return a day after — the rush is worst on the festival day itself.'},
+{t:'Gifts that land well',b:'The gifts people remember are the ones that fit the festival: diyas and sweets for Diwali, a rakhi posted a week early, a plant or a book for a housewarming. Send by courier at least five days before the day — festival-week couriers run late.'},
+{t:'Fasting, simply',b:'A fast usually means no food until a set time, or only fruit and milk for the day. It is a personal choice, not a rule for everyone. If you are ill, pregnant, diabetic or on medicine, skip the fast or keep it to fruit — no festival asks you to risk your health.'}
+];
+var SEED_OCCASIONS=[
+{id:'occ-appa',name:"Appa's Birthday",date:'2026-12-03',note:'Order the cake a week early',sample:true},
+{id:'occ-flat',name:'Flat Anniversary',date:'2027-02-01',note:'One year in BTM Layout',sample:true}
+];
+var MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+var DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+/* ---------- helpers ---------- */
+function $(s){return document.querySelector(s);}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s));}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function parseD(s){var p=s.split('-').map(Number);return new Date(p[0],p[1]-1,p[2]);}
+function todayMid(){var n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate());}
+function daysLeft(dateStr){return Math.round((parseD(dateStr)-todayMid())/86400000);}
+function fmtDate(dateStr){var d=parseD(dateStr);return DAYS[d.getDay()]+', '+d.getDate()+' '+MONTHS[d.getMonth()]+' '+d.getFullYear();}
+function shortDate(dateStr){var d=parseD(dateStr);return d.getDate()+' '+MONTHS[d.getMonth()].slice(0,3)+' '+d.getFullYear();}
+function safeScroll(el){try{if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'start'});}catch(e){}}
+function starSvg(on){return '<svg width="20" height="20" viewBox="0 0 24 24" fill="'+(on?'#d4a017':'none')+'" stroke="#d4a017" stroke-width="1.8"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4 6.1 20.5l1.2-6.5L2.5 9.4l6.6-.9L12 2.5z"/></svg>';}
+function checkSvg(){return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg>';}
+
+/* ---------- state ---------- */
+var KEY='utsavkit-v1';
+var state={checks:{},stars:[],customs:[],seenIntro:false,coachDone:false,removedSamples:false};
+function load(){
+  try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&typeof s==='object')state=s;}}catch(e){}
+  if(!Array.isArray(state.customs)||!state.customs.length){state.customs=SEED_OCCASIONS.map(function(o){return {id:o.id,name:o.name,date:o.date,note:o.note,sample:true};});}
+  if(!Array.isArray(state.stars))state.stars=[];
+  if(!state.checks||typeof state.checks!=='object')state.checks={};
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+load();
+
+function allItems(){
+  var f=FESTIVALS.map(function(x){return {id:x.id,name:x.name,date:x.date,region:x.region,comm:x.comm,kind:x.kind,blurb:x.blurb,prep:x.prep.slice(),custom:false,sample:false};});
