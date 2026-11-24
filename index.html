@@ -166,3 +166,71 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--amber);border-co
 .btn.terra{background:var(--terra);color:#fff}
 .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 .settings{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;box-shadow:var(--shadow2)}
+footer.site{margin-top:44px;border-top:1px solid var(--line);padding:26px 0 40px;color:var(--muted);font-size:13.5px}
+footer.site .fine{margin-top:10px;font-size:12.5px}
+/* ---------- coach ---------- */
+#coach{position:fixed;inset:0;z-index:120;background:rgba(22,13,5,.6);display:none;align-items:center;justify-content:center;padding:20px}
+#coach.show{display:flex}
+#coach .box{background:var(--paper2);border-radius:22px;max-width:440px;width:100%;padding:26px;box-shadow:var(--shadow);text-align:center}
+#coach .dots{display:flex;gap:6px;justify-content:center;margin:16px 0 4px}
+#coach .dots i{width:8px;height:8px;border-radius:50%;background:#e0d2b6}
+#coach .dots i.on{background:var(--terra)}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .today-card .card{grid-template-columns:1fr}
+  .today-right{text-align:left;border-left:0;padding-left:0;border-top:1px dashed var(--line2);padding-top:14px}
+  .wheel-wrap{grid-template-columns:1fr}
+  .hero-photo{height:340px}
+  nav.main{display:none}
+  .form-grid{grid-template-columns:1fr}
+}
+@media (max-width:520px){
+  .big-num{font-size:42px}
+  .rail{grid-auto-columns:minmax(200px,82vw)}
+  section{padding-top:26px}
+}
+@media (prefers-reduced-motion:reduce){
+  .hero-photo img,.band img{animation:none}
+  #intro .bar i{animation-duration:.4s}
+  #intro .flame{animation:none}
+}
+</style>
+</head>
+<body>
+<!-- intro -->
+<div id="intro" role="button" aria-label="Skip intro" tabindex="0">
+  <div class="inner">
+    <svg class="flame" viewBox="0 0 64 64" fill="none" aria-hidden="true"><path d="M32 6C32 6 14 24 14 38a18 18 0 0 0 36 0C50 24 32 6 32 6Z" fill="#e8a33d"/><path d="M32 26c0 0-8 9-8 16a8 8 0 0 0 16 0c0-7-8-16-8-16Z" fill="#fbe3a1"/><ellipse cx="32" cy="56" rx="16" ry="3" fill="#a06a2c"/></svg>
+    <h1>Utsav<span>Kit</span></h1>
+    <p class="tag">Every festival, from today to next Christmas — dates, countdowns and a plan for each one.</p>
+    <div class="bar"><i></i></div>
+    <div class="skip">Tap anywhere to skip</div>
+  </div>
+</div>
+
+<!-- header -->
+<header class="site">
+  <div class="wrap row">
+    <a class="logo" href="#" onclick="return false">
+      <span class="mark" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 64 64" fill="none"><path d="M32 6C32 6 14 24 14 38a18 18 0 0 0 36 0C50 24 32 6 32 6Z" fill="#e8a33d"/><path d="M32 26c0 0-8 9-8 16a8 8 0 0 0 16 0c0-7-8-16-8-16Z" fill="#fbe3a1"/></svg></span>
+      <span><b>UtsavKit</b><small>THE FESTIVAL YEAR</small></span>
+    </a>
+    <nav class="main" aria-label="Sections">
+      <a href="#wheel">Year wheel</a><a href="#coming">Coming up</a><a href="#months">Months</a><a href="#weekends">Long weekends</a><a href="#guides">Guides</a>
+    </nav>
+    <span class="today-pill" id="todayPill">Today · 24 Nov</span>
+  </div>
+</header>
+
+<!-- hero -->
+<div class="hero">
+  <div class="hero-photo"><img src="utsavkit-hero.webp" alt="Rows of brass oil lamps glowing at dusk in a South Indian temple courtyard" onerror="this.style.display='none'"></div>
+  <div class="hero-copy"><div class="wrap">
+    <div class="eyebrow" style="color:#e8c07a">Your festival year · Nov 2026 — Dec 2027</div>
+    <h1>Never miss a festival again.</h1>
+    <p>33 festivals with real dates, a wheel of the whole year ahead, prep lists for each one, and every long weekend worth booking travel for.</p>
+  </div></div>
+</div>
+
+<div class="wrap today-card">
