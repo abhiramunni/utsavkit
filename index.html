@@ -352,3 +352,50 @@ footer.site .fine{margin-top:10px;font-size:12.5px}
     <ul class="prep" id="sheetPrep"></ul>
     <div class="btnrow">
       <button class="btn terra" id="sheetStar" type="button">Star this festival</button>
+      <button class="btn ghost" id="sheetShare" type="button">Copy festival note</button>
+    </div>
+  </div>
+</div>
+
+<!-- add occasion sheet -->
+<div class="sheet-back" id="occBack">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="occTitle">
+    <button class="x" id="occClose" type="button" aria-label="Close">×</button>
+    <div class="eyebrow">Your own occasion</div>
+    <h2 id="occTitle">Add an occasion</h2>
+    <p class="muted small">Birthdays, anniversaries, a housewarming — anything you want on the wheel next to the festivals.</p>
+    <form id="occForm" style="margin-top:14px">
+      <div class="form-grid">
+        <div><label class="f" for="occName">What is it?</label><input id="occName" required maxlength="60" placeholder="e.g. Amma's birthday"></div>
+        <div><label class="f" for="occDate">Date</label><input id="occDate" type="date" required min="2026-11-24" max="2027-12-31"></div>
+      </div>
+      <div style="margin-top:12px"><label class="f" for="occNote">Note (optional)</label><input id="occNote" maxlength="120" placeholder="e.g. Order the cake a week early"></div>
+      <div class="btnrow"><button class="btn" type="submit">Save occasion</button><button class="btn ghost" type="button" id="occCancel">Cancel</button></div>
+    </form>
+  </div>
+</div>
+
+<!-- coach -->
+<div id="coach" role="dialog" aria-modal="true">
+  <div class="box">
+    <div class="eyebrow">A quick tour · <span id="coachStep">1 of 3</span></div>
+    <h3 class="serif" id="coachTitle" style="font-size:24px;margin-top:8px">The wheel is your year</h3>
+    <p class="muted" id="coachText" style="margin-top:8px">One circle holds November 2026 to October 2027. Every dot is a festival — tap one to see its date and prep list.</p>
+    <div class="dots"><i class="on"></i><i></i><i></i></div>
+    <div class="btnrow" style="justify-content:center">
+      <button class="btn ghost" id="coachSkip" type="button">Skip tour</button>
+      <button class="btn" id="coachNext" type="button">Next</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+/* ---------- data: 33 festivals, dates verified 24 Nov 2026 ---------- */
+/* Sources: DoPT central govt holiday list 2027 (16 Jul 2026); panchang calendars.
+   Moon-sighted dates (Eid) are expected dates. Holi: colours 22 Mar, govt holiday 23 Mar.
+   Makar Sankranti: most panchangs 15 Jan, govt list 14 Jan — noted in the blurb. */
+var FESTIVALS=[
+{id:'karthigai',name:'Karthigai Deepam',date:'2026-11-24',region:'Tamil Nadu & Kerala',comm:'Hindu',kind:'Festival',blurb:'The festival of lights — rows of oil lamps are lit at dusk to honour Shiva as an endless pillar of light, on the full moon of the month of Karthigai.',prep:['Buy small clay lamps and gingelly oil','Clean the lamp stands and the front porch','Light the lamps at dusk, starting from the entrance','Make nei appam or pori urundai for the evening']},
+{id:'gurunanak26',name:'Guru Nanak Jayanti',date:'2026-11-24',region:'Pan-India',comm:'Sikh',kind:'Festival',blurb:'The birth anniversary of Guru Nanak, founder of Sikhism — early-morning processions, kirtan and langar at the gurdwara.',prep:['Visit the gurdwara for the morning kirtan','Join or serve at a langar if you can','Share a simple meal with neighbours']},
