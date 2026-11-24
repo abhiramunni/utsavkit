@@ -770,3 +770,59 @@ function wire(){
     if(!name||!date)return;
     state.customs.push({id:'occ-'+Date.now(),name:name,date:date,note:note,sample:false});
     save();closeOcc();this.reset();
+    renderWheel();renderHero();renderComing();renderMonthChips();renderMonthList();renderSummary();
+    var d=parseD(date);selectMonth(d.getFullYear(),d.getMonth());
+  });
+  $('#copySummary').addEventListener('click',function(){copyText(summaryText(),'Summary copied — paste it anywhere.');});
+  $('#removeSamples').addEventListener('click',function(){
+    var before=state.customs.length;
+    state.customs=state.customs.filter(function(o){return !o.sample;});
+    state.removedSamples=true;save();
+    renderWheel();renderHero();renderComing();renderMonthChips();renderMonthList();renderSummary();
+    $('#copyNote').textContent='Removed '+(before-state.customs.length)+' sample occasion(s). Your own occasions were kept.';
+  });
+  $('#eraseAll').addEventListener('click',function(){
+    if(!this.dataset.armed){this.dataset.armed='1';this.textContent='Tap again to erase everything';setTimeout(function(){var b=$('#eraseAll');if(b){delete b.dataset.armed;b.textContent='Erase everything';}},4000);return;}
+    delete this.dataset.armed;this.textContent='Erase everything';
+    state={checks:{},stars:[],customs:[],seenIntro:true,coachDone:true,removedSamples:true};
+    save();load();renderAll();
+    $('#copyNote').textContent='Everything erased. A fresh start — the two sample occasions are back.';
+  });
+  $('#coachNext').addEventListener('click',function(){
+    if(coachStep>=2){hideCoach();state.coachDone=true;save();}
+    else showCoach(coachStep+1);
+  });
+  $('#coachSkip').addEventListener('click',function(){hideCoach();state.coachDone=true;save();});
+  var intro=$('#intro');
+  intro.addEventListener('click',hideIntro);
+  intro.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();hideIntro();}});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeSheet();closeOcc();hideCoach();}});
+}
+function copyText(text,note){
+  var done=function(){$('#copyNote').textContent=note;};
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
+    else{fallbackCopy(text);done();}
+  }catch(e){fallbackCopy(text);done();}
+}
+function fallbackCopy(text){
+  try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}catch(e){}
+}
+
+/* ---------- init ---------- */
+function renderAll(){
+  renderWheel();renderHero();renderComing();renderMonthChips();renderMonthList();renderWeekends();renderGuides();renderSummary();
+}
+renderAll();
+wire();
+if(state.seenIntro){$('#intro').classList.add('quick');}
+setTimeout(hideIntro, state.seenIntro?1200:3800);
+setTimeout(function(){
+  if(!state.seenIntro){state.seenIntro=true;save();}
+  if(!state.coachDone)showCoach(0);
+}, state.seenIntro?1400:4000);
+window.UtsavKit={state:state,FESTIVALS:FESTIVALS,LONG_WEEKENDS:LONG_WEEKENDS,GUIDES:GUIDES,daysLeft:daysLeft,upcoming:upcoming,findItem:findItem,summaryText:summaryText,prepDone:prepDone,allItems:allItems,selectMonth:selectMonth,openSheet:openSheet};
+})();
+</script>
+</body>
+</html>
