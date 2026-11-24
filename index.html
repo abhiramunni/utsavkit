@@ -87,3 +87,44 @@ section{padding:34px 0 6px}
 .fest-card:hover{border-color:var(--bronze2);transform:translateY(-2px);transition:.2s}
 .fest-card .d{font-family:Fraunces,serif;font-size:15px;color:var(--terra);font-weight:700}
 .fest-card h3{font-size:19px;margin:4px 0 6px}
+.fest-card .meta{font-size:13px;color:var(--muted)}
+.ring-row{display:flex;align-items:center;gap:10px;margin-top:12px}
+.ring-row b{font-size:13px}
+.star-btn{background:none;border:0;padding:4px;margin-left:auto;color:#c9b48f}
+.star-btn.on{color:var(--gold)}
+/* ---------- year wheel ---------- */
+.wheel-wrap{background:var(--card);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:22px;display:grid;grid-template-columns:1.15fr .85fr;gap:22px;align-items:center}
+.wheel-box{position:relative}
+.wheel-box svg{width:100%;height:auto;display:block}
+.wheel-dot{cursor:pointer}
+.wheel-dot circle{transition:.15s}
+.wheel-dot:hover circle{stroke:#fff;stroke-width:2}
+.wheel-note{font-size:13px;color:var(--muted);margin-top:8px}
+.wheel-side h3{font-size:22px;margin-bottom:8px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.dot-key{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink2)}
+.dot-key i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.wheel-months{display:flex;flex-wrap:wrap;gap:6px}
+.mchip{border:1px solid var(--line2);background:#fff;border-radius:99px;padding:6px 12px;font-size:13px;font-weight:600;color:var(--ink2)}
+.mchip.on{background:#3a2410;color:#f7ead2;border-color:#3a2410}
+/* ---------- month explorer + lists ---------- */
+.month-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.mrow{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;box-shadow:var(--shadow2);cursor:pointer;display:flex;gap:14px;align-items:flex-start}
+.mrow:hover{border-color:var(--bronze2)}
+.mrow .daybox{flex:none;width:58px;text-align:center;background:#f6ead2;border:1px solid var(--line2);border-radius:12px;padding:8px 4px}
+.mrow .daybox b{display:block;font-family:Fraunces,serif;font-size:24px;line-height:1;color:var(--terra)}
+.mrow .daybox span{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.mrow h3{font-size:18px}
+.mrow .meta{font-size:13px;color:var(--muted);margin-top:2px}
+.mrow .count{margin-left:auto;flex:none;font-size:12px;font-weight:700;color:var(--bronze);background:#f6ead2;border-radius:99px;padding:4px 9px}
+.empty{border:1px dashed var(--line2);border-radius:var(--r);padding:26px;text-align:center;color:var(--muted)}
+/* ---------- long weekends ---------- */
+.lw-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.lw{background:linear-gradient(135deg,#3a2410,#6b3f14);color:#f7ead2;border-radius:var(--r);padding:18px;box-shadow:var(--shadow)}
+.lw .when{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#e8c07a;font-weight:700}
+.lw h3{font-size:21px;margin:6px 0}
+.lw p{color:#ecd9ae;font-size:14px;margin:0}
+.lw .take{margin-top:12px;display:inline-block;background:rgba(232,163,61,.18);border:1px solid rgba(232,163,61,.5);color:#ffd98a;border-radius:99px;padding:5px 11px;font-size:12.5px;font-weight:700}
+/* ---------- photo band ---------- */
+.band{border-radius:24px;overflow:hidden;margin:30px 0 4px;position:relative;height:260px}
+.band img{width:100%;height:100%;object-fit:cover;animation:kb 30s ease-in-out infinite alternate}
