@@ -634,3 +634,71 @@ function renderMonthList(){
     row.innerHTML='<div class="daybox"><b>'+d.getDate()+'</b><span>'+MONTHS[d.getMonth()].slice(0,3)+'</span></div><div><h3>'+esc(it.name)+(it.custom?' <span class="chip terra" style="font-size:11px">Yours</span>':'')+'</h3><div class="meta">'+esc(fmtDate(it.date))+' · '+esc(it.region)+' · '+esc(it.comm)+'</div><div class="meta">'+(dl<0?'Passed':dl===0?'Today!':dl+' days to go')+'</div></div><span class="count">'+(isStarred(it.id)?'Starred':esc(it.kind))+'</span>';
     row.addEventListener('click',function(){openSheet(it.id);});
     row.addEventListener('keydown',function(e){if(e.key==='Enter')openSheet(it.id);});
+    list.appendChild(row);
+  });
+}
+
+/* ---------- long weekends + guides ---------- */
+function renderWeekends(){
+  var g=$('#lwGrid');if(!g)return;
+  g.innerHTML='';
+  LONG_WEEKENDS.forEach(function(w){
+    var d=document.createElement('div');d.className='lw';
+    d.innerHTML='<div class="when">'+esc(w.when)+'</div><h3>'+esc(w.name)+'</h3><p>'+esc(w.note)+'</p><span class="take">'+esc(w.take)+'</span>';
+    g.appendChild(d);
+  });
+}
+function renderGuides(){
+  var g=$('#guidesGrid');if(!g)return;
+  g.innerHTML='';
+  GUIDES.forEach(function(gd){
+    var d=document.createElement('div');d.className='guide';
+    d.innerHTML='<h3>'+esc(gd.t)+'<span class="chev"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span></h3><div class="body">'+esc(gd.b)+'</div>';
+    d.addEventListener('click',function(){d.classList.toggle('open');});
+    g.appendChild(d);
+  });
+}
+function renderSummary(){
+  var el=$('#occSummary');if(!el)return;
+  el.textContent='Your occasions: '+state.customs.length+' saved · Starred festivals: '+state.stars.length+' · Prep ticks saved on this device.';
+}
+
+/* ---------- detail sheet ---------- */
+var currentSheet=null;
+function openSheet(id){
+  var it=findItem(id);if(!it)return;
+  currentSheet=id;
+  $('#sheetKind').textContent=it.custom?'Your occasion':it.kind;
+  $('#sheetTitle').textContent=it.name;
+  $('#sheetDate').textContent=fmtDate(it.date)+' · '+it.region+' · '+it.comm;
+  $('#sheetBlurb').textContent=it.blurb;
+  var dl=daysLeft(it.date);
+  $('#sheetDays').textContent=dl<0?'Passed':dl===0?'Today!':dl+' days to go';
+  $('#sheetChips').innerHTML='<span class="chip">'+esc(it.comm)+'</span> <span class="chip">'+esc(it.region)+'</span>'+(it.kind==='National holiday'||it.kind==='Holiday'?'<span class="chip gold">Public holiday</span>':'')+(it.date==='2027-03-10'||it.date==='2027-05-17'?'<span class="chip terra">Moon-sighted — date may move</span>':'');
+  var starBtn=$('#sheetStar');
+  starBtn.textContent=isStarred(id)?'Unstar this festival':'Star this festival';
+  renderPrep(it);
+  $('#sheetBack').classList.add('show');
+}
+function renderPrep(it){
+  var ul=$('#sheetPrep');ul.innerHTML='';
+  if(!it.prep.length){ul.innerHTML='<li style="cursor:default"><span class="muted">No prep list for this one — just turn up and enjoy it.</span></li>';}
+  it.prep.forEach(function(task,i){
+    var c=state.checks[it.id]||[];
+    var li=document.createElement('li');
+    li.className=c[i]?'done':'';
+    li.innerHTML='<span class="box">'+(c[i]?checkSvg():'')+'</span><span>'+esc(task)+'</span>';
+    li.addEventListener('click',function(){
+      var arr=state.checks[it.id]||[];
+      arr[i]=!arr[i];state.checks[it.id]=arr;save();
+      renderPrep(it);renderComing();renderMonthList();
+    });
+    ul.appendChild(li);
+  });
+  var done=prepDone(it);
+  if(done===null){$('#sheetProgLabel').textContent='No prep list for this occasion';$('#sheetProgBar').style.width='0%';}
+  else{$('#sheetProgLabel').textContent='Prep: '+done+' of '+it.prep.length+' done';$('#sheetProgBar').style.width=(it.prep.length?Math.round(100*done/it.prep.length):0)+'%';}
+}
+function closeSheet(){$('#sheetBack').classList.remove('show');currentSheet=null;}
+
+/* ---------- add occasion ---------- */
