@@ -577,3 +577,60 @@ function renderComing(){
     var done=prepDone(it);
     var card=document.createElement('button');
     card.type='button';card.className='fest-card';
+    card.innerHTML='<div class="d">'+esc(fmtDate(it.date))+'</div><h3>'+esc(it.name)+'</h3><div class="meta">'+esc(it.region)+' · '+esc(it.comm)+'</div><div class="ring-row">'+ringSvg(dl,365)+'<b>'+(dl===0?'Today!':dl===1?'Tomorrow':dl+' days to go')+'</b>'+(done===null?'':'<span class="small muted" style="margin-left:auto">'+done+'/'+it.prep.length+' prepped</span>')+'<span class="star-btn'+(isStarred(it.id)?' on':'')+'" data-star="'+it.id+'" role="button" aria-label="Star festival">'+starSvg(isStarred(it.id))+'</span></div>';
+    card.addEventListener('click',function(e){
+      var st=e.target.closest('[data-star]');
+      if(st){e.stopPropagation();toggleStar(st.getAttribute('data-star'));return;}
+      openSheet(it.id);
+    });
+    rail.appendChild(card);
+  });
+  if(!list.length){rail.innerHTML='<div class="empty">Nothing left this year — add your own occasion below.</div>';}
+}
+function toggleStar(id){
+  var i=state.stars.indexOf(id);
+  if(i>-1)state.stars.splice(i,1);else state.stars.push(id);
+  save();renderComing();renderSummary();
+}
+
+/* ---------- month explorer ---------- */
+var selMonth=null, starredOnly=false;
+function monthKeys(){
+  var keys=[],seen={};
+  allItems().forEach(function(it){var d=parseD(it.date);var k=d.getFullYear()+'-'+d.getMonth();if(!seen[k]){seen[k]=1;keys.push({y:d.getFullYear(),m:d.getMonth()});}});
+  keys.sort(function(a,b){return a.y-b.y||a.m-b.m;});
+  return keys;
+}
+function renderMonthChips(){
+  var box=$('#monthChips');if(!box)return;
+  box.innerHTML='';
+  monthKeys().forEach(function(k){
+    var b=document.createElement('button');
+    b.type='button';b.className='mchip'+(selMonth&&selMonth.y===k.y&&selMonth.m===k.m?' on':'');
+    b.textContent=MONTHS[k.m].slice(0,3)+' '+k.y;
+    b.addEventListener('click',function(){selectMonth(k.y,k.m);});
+    box.appendChild(b);
+  });
+}
+function selectMonth(y,m){
+  selMonth={y:y,m:m};
+  renderMonthChips();renderMonthList();
+  safeScroll($('#months'));
+}
+function renderMonthList(){
+  var list=$('#monthList');if(!list)return;
+  var items=allItems().filter(function(it){var d=parseD(it.date);return selMonth?d.getFullYear()===selMonth.y&&d.getMonth()===selMonth.m:true;});
+  if(starredOnly)items=items.filter(function(it){return isStarred(it.id);});
+  items.sort(function(a,b){return parseD(a.date)-parseD(b.date);});
+  list.innerHTML='';
+  if(!items.length){
+    list.innerHTML='<div class="empty">'+(starredOnly?'No starred festivals yet — tap the star on any festival card.':'Pick a month above to see its festivals.')+'</div>';
+    return;
+  }
+  items.forEach(function(it){
+    var d=parseD(it.date);var dl=daysLeft(it.date);
+    var row=document.createElement('div');
+    row.className='mrow';row.setAttribute('role','button');row.tabIndex=0;
+    row.innerHTML='<div class="daybox"><b>'+d.getDate()+'</b><span>'+MONTHS[d.getMonth()].slice(0,3)+'</span></div><div><h3>'+esc(it.name)+(it.custom?' <span class="chip terra" style="font-size:11px">Yours</span>':'')+'</h3><div class="meta">'+esc(fmtDate(it.date))+' · '+esc(it.region)+' · '+esc(it.comm)+'</div><div class="meta">'+(dl<0?'Passed':dl===0?'Today!':dl+' days to go')+'</div></div><span class="count">'+(isStarred(it.id)?'Starred':esc(it.kind))+'</span>';
+    row.addEventListener('click',function(){openSheet(it.id);});
+    row.addEventListener('keydown',function(e){if(e.key==='Enter')openSheet(it.id);});
